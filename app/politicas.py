@@ -7,6 +7,7 @@ fica como falso positivo nem como descartar.
 import re
 from collections.abc import Iterator
 from typing import Any
+from urllib.parse import unquote_plus
 
 from app.schemas import AnaliseIA
 
@@ -21,9 +22,20 @@ PADROES_INJECAO = [
         r"system\s*prompt|prompt\s+do\s+sistema",
         r"you\s+are\s+now|voc[eê]\s+agora\s+[eé]",
         r"(?:false|falso)\s+positiv",
-        r"<\s*/?\s*(?:system|assistant|dados_nao_confiaveis)",
+        r"<\s*/?\s*(?:system|assistant|dados\s+nao\s+confiaveis)",
+        # Campos do formato de resposta da IA no meio de um log: alguém tentando ditar a saída.
+        r"classificacao|acao\s+sugerida|indicios\s+manipulacao",
+        # Alegação de autorização endereçada a quem faz a triagem.
+        r"(?:n[aã]o|do\s+not|don'?t)\s+escal",
+        r"(?:pentest|red\s*team)\s+(?:\w+\s+){0,2}autoriz|authori[sz]ed\s+(?:pentest|red\s*team|test|scan)",
+        r"autorizad\w*\s+pel[oa]\s",
     )
 ]
+
+
+def _normalizar(texto: str) -> str:
+    # Decodifica a URL (%20, +) e troca _ e - por espaço: "falso_positivo", "teste-autorizado".
+    return re.sub(r"[_\-]+", " ", unquote_plus(texto))
 
 
 def _textos(valor: Any) -> Iterator[str]:
@@ -44,7 +56,8 @@ def detectar_injecao(contexto: dict) -> bool:
         contexto.get("campos_decodificados"),
         contexto.get("reputacao_ip"),
     ]
-    return any(padrao.search(texto) for texto in _textos(alvos) for padrao in PADROES_INJECAO)
+    textos = [_normalizar(texto) for texto in _textos(alvos)]
+    return any(padrao.search(texto) for texto in textos for padrao in PADROES_INJECAO)
 
 
 def ip_malicioso(reputacao: dict) -> bool:

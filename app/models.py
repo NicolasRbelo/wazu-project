@@ -46,6 +46,45 @@ class ReputacaoIP(Base):
     consultado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=agora_utc)
 
 
+class Incidente(Base):
+    """Alertas da mesma origem numa janela de tempo. Ver app/incidentes.py."""
+
+    __tablename__ = "incidentes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    chave: Mapped[str] = mapped_column(String(160), index=True)
+    primeiro_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    ultimo_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    total: Mapped[int] = mapped_column(Integer, default=0)
+    nivel_max: Mapped[int] = mapped_column(Integer)
+    # Preenchida pela revisão do analista; incidente decidido não recebe alertas novos.
+    decisao: Mapped[str | None] = mapped_column(String(16))
+    decidido_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class IncidenteAlerta(Base):
+    """Vínculo alerta -> incidente numa tabela própria: a tabela de alertas não muda (sem migração)."""
+
+    __tablename__ = "incidente_alertas"
+
+    alerta_id: Mapped[int] = mapped_column(ForeignKey("alertas.id"), primary_key=True)
+    incidente_id: Mapped[int] = mapped_column(ForeignKey("incidentes.id"), index=True)
+
+
+class Bloqueio(Base):
+    """Cada resposta ativa disparada por um analista: trilha de auditoria do que foi feito."""
+
+    __tablename__ = "bloqueios"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    alerta_id: Mapped[int] = mapped_column(ForeignKey("alertas.id"), index=True)
+    ip: Mapped[str] = mapped_column(String(45))
+    agente_id: Mapped[str] = mapped_column(String(16))
+    sucesso: Mapped[bool]
+    detalhe: Mapped[str] = mapped_column(Text)
+    executado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=agora_utc)
+
+
 class Analise(Base):
     """Sugestão da IA para um alerta. Só um humano muda a revisão (etapa 5)."""
 

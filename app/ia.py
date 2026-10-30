@@ -54,7 +54,27 @@ class ErroIA(Exception):
 
 
 class LimiteIA(ErroIA):
-    """A cota da API de IA acabou (HTTP 429)."""
+    """A cota da API de IA acabou (HTTP 429). Traz qual cota e quanto esperar, quando o Gemini diz."""
+
+    def __init__(self, mensagem: str, espera_s: float | None = None) -> None:
+        super().__init__(mensagem)
+        self.espera_s = espera_s
+
+
+def _limite_de(resposta: httpx.Response) -> LimiteIA:
+    """Lê do corpo do 429 o nome da cota estourada e o retryDelay ("38s")."""
+    try:
+        detalhes = resposta.json()["error"].get("details", [])
+    except (ValueError, KeyError, TypeError, AttributeError):
+        return LimiteIA("HTTP 429")
+    cota = next(
+        (v.get("quotaId") for d in detalhes for v in d.get("violations", []) if isinstance(v, dict)),
+        None,
+    )
+    atraso = next((d.get("retryDelay") for d in detalhes if isinstance(d, dict) and d.get("retryDelay")), None)
+    espera = float(atraso.rstrip("s")) if isinstance(atraso, str) and atraso.rstrip("s").replace(".", "", 1).isdigit() else None
+    partes = [p for p in (cota, f"tentar de novo em {atraso}" if atraso else None) if p]
+    return LimiteIA("HTTP 429" + (f" ({', '.join(partes)})" if partes else ""), espera)
 
 
 def _opcoes(tipo: Any) -> list[str]:
@@ -84,7 +104,7 @@ def _limitar(valor: Any, limite: int) -> str:
     return texto if len(texto) <= limite else texto[:limite] + SUFIXO_TRUNCADO
 
 
-def montar_contexto(alerta: Alerta, reputacao: ReputacaoSaida) -> dict:
+def montar_contexto(alerta: Alerta, reputacao: ReputacaoSaida, incidente: dict | None = None) -> dict:
     """Só o necessário para a triagem: o raw_json inteiro nunca vai para a IA."""
     bruto = json.loads(alerta.raw_json)
     regra = bruto.get("rule") or {}
@@ -110,6 +130,8 @@ def montar_contexto(alerta: Alerta, reputacao: ReputacaoSaida) -> dict:
             for nome, resultado in reputacao.fontes.items()
             if resultado.status == "ok"
         },
+        # Contagens do próprio sistema (confiáveis): quantos alertas desta origem na janela.
+        "incidente": incidente,
     }
 
 
@@ -144,7 +166,7 @@ def chamar_gemini(
     except httpx.HTTPError as erro:
         raise ErroIA(type(erro).__name__) from erro
     if resposta.status_code == 429:
-        raise LimiteIA("HTTP 429")
+        raise _limite_de(resposta)
     if resposta.is_error:
         raise ErroIA(f"HTTP {resposta.status_code}")
 
@@ -164,9 +186,13 @@ def chamar_gemini(
 
 
 def analisar_alerta(
-    db: Session, cliente: httpx.Client, alerta: Alerta, reputacao: ReputacaoSaida
+    db: Session,
+    cliente: httpx.Client,
+    alerta: Alerta,
+    reputacao: ReputacaoSaida,
+    incidente: dict | None = None,
 ) -> Analise:
-    contexto = montar_contexto(alerta, reputacao)
+    contexto = montar_contexto(alerta, reputacao, incidente)
     referencias = feedback.bloco_prompt(feedback.exemplos_para(alerta.rule_id))
     sistema, pedido = montar_prompt(contexto, referencias)
     sugestao_ia, modelo = chamar_gemini(

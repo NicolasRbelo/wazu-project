@@ -2,8 +2,17 @@ import { ArrowLeft, ShieldWarning } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState } from "react";
 import { api, ErroApi, ErroRede } from "../api";
 import { useIdioma } from "../i18n";
-import { resumoDe, type Alerta, type Analise, type PedidoRevisao, type Reputacao, type ResumoAnalise } from "../tipos";
-import { dataHora, digitando } from "../util";
+import {
+  acaoDecidida,
+  resumoDe,
+  type Alerta,
+  type Analise,
+  type Bloqueio,
+  type PedidoRevisao,
+  type Reputacao,
+  type ResumoAnalise,
+} from "../tipos";
+import { dataHora, digitando, hora } from "../util";
 import { AnaliseBloco } from "./AnaliseBloco";
 import { BarraDecisao, type Formulario } from "./BarraDecisao";
 import { Carimbo, Designador } from "./Marcas";
@@ -30,6 +39,10 @@ export function Detalhe({ alerta, token, aoResumo, aoDecidido, aoProximo, aoAnte
   const [estadoReputacao, setEstadoReputacao] = useState<EstadoReputacao>("ocioso");
   const [erroReputacao, setErroReputacao] = useState<string | null>(null);
   const [formulario, setFormulario] = useState<Formulario>(null);
+  // undefined: ainda não consultado; null: IP não bloqueado.
+  const [bloqueio, setBloqueio] = useState<Bloqueio | null | undefined>(undefined);
+  const [bloqueando, setBloqueando] = useState(false);
+  const [erroBloqueio, setErroBloqueio] = useState<string | null>(null);
 
   const mensagem = useCallback(
     (falha: unknown): string => {
@@ -141,6 +154,28 @@ export function Detalhe({ alerta, token, aoResumo, aoDecidido, aoProximo, aoAnte
   }, [analise, analisando, pendente, formulario, aprovando, analisar, aprovar]);
 
   const decidida = analise && analise.revisao !== "pendente" ? analise.revisao : null;
+  const podeBloquear = Boolean(analise && alerta.srcip && acaoDecidida(analise) === "bloquear_ip");
+
+  // Decisão de bloquear: confere se o IP já foi bloqueado no agente.
+  useEffect(() => {
+    if (!podeBloquear || bloqueio !== undefined) return;
+    api
+      .bloqueio(token, alerta.id)
+      .then(setBloqueio)
+      .catch(() => setBloqueio(null));
+  }, [podeBloquear, bloqueio, token, alerta.id]);
+
+  const bloquear = useCallback(async () => {
+    setBloqueando(true);
+    setErroBloqueio(null);
+    try {
+      setBloqueio(await api.bloquear(token, alerta.id));
+    } catch (falha) {
+      setErroBloqueio(mensagem(falha));
+    } finally {
+      setBloqueando(false);
+    }
+  }, [token, alerta.id, mensagem]);
 
   return (
     <section className="detalhe" aria-labelledby="detalhe-titulo">
@@ -160,6 +195,15 @@ export function Detalhe({ alerta, token, aoResumo, aoDecidido, aoProximo, aoAnte
               {alerta.srcip && <li>{alerta.srcip}</li>}
               <li>{t("recebido", { quando: dataHora(alerta.recebido_em, idioma) })}</li>
             </ul>
+            {alerta.incidente && alerta.incidente.total > 1 && (
+              <p className="detalhe__incidente mono">
+                {t("incidente", {
+                  n: alerta.incidente.total,
+                  inicio: hora(alerta.incidente.primeiro_em, idioma),
+                  fim: hora(alerta.incidente.ultimo_em, idioma),
+                })}
+              </p>
+            )}
           </div>
           {decidida && <Carimbo revisao={decidida} grande bater />}
         </header>
@@ -203,6 +247,12 @@ export function Detalhe({ alerta, token, aoResumo, aoDecidido, aoProximo, aoAnte
         aoAnalisar={analisar}
         aoProximo={aoProximo}
         aoAnterior={aoAnterior}
+        alertasNoIncidente={alerta.incidente?.total ?? 1}
+        resposta={
+          podeBloquear
+            ? { ip: alerta.srcip!, agente: alerta.agent_name ?? "?", bloqueio, bloqueando, erro: erroBloqueio, aoBloquear: bloquear }
+            : null
+        }
       />
     </section>
   );

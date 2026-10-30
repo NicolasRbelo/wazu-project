@@ -1,0 +1,9 @@
+admin
+root
+oracle
+test
+ubuntu
+postgres
+git
+support
+analista

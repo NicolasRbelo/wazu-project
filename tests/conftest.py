@@ -17,6 +17,7 @@ from app import enriquecimento
 from app.config import settings
 from app.database import Base, get_db
 from app.enriquecimento import get_http_client
+from app.resposta import get_cliente_wazuh
 from app.main import app
 from falsos import RESPOSTA_ABUSEIPDB, RESPOSTA_VIRUSTOTAL, SUGESTAO_PADRAO, resposta_gemini
 
@@ -24,6 +25,7 @@ from falsos import RESPOSTA_ABUSEIPDB, RESPOSTA_VIRUSTOTAL, SUGESTAO_PADRAO, res
 settings.abuseipdb_api_key = None
 settings.virustotal_api_key = None
 settings.gemini_api_key = None
+settings.wazuh_api_url = None
 
 EXEMPLOS = Path(__file__).parent.parent / "exemplos"
 HOSTS = {
@@ -132,6 +134,35 @@ def fontes(rede, monkeypatch):
     monkeypatch.setattr(settings, "virustotal_api_key", SecretStr("chave-vt-teste"))
     monkeypatch.setattr(enriquecimento, "ip_publico", lambda ip: True)
     return rede
+
+
+@pytest.fixture
+def wazuh_api(client, monkeypatch):
+    """API do Wazuh falsa: autentica e aceita o active-response. Registra cada requisição.
+
+    Para simular falha: wazuh_api["active_response"] = (codigo_http, corpo_json).
+    """
+    monkeypatch.setattr(settings, "wazuh_api_url", "https://wazuh.teste:55000")
+    monkeypatch.setattr(settings, "wazuh_api_usuario", "usuario-teste")
+    monkeypatch.setattr(settings, "wazuh_api_senha", SecretStr("senha-teste"))
+    estado = {
+        "chamadas": [],
+        "active_response": (200, {"data": {"affected_items": ["001"], "total_affected_items": 1}, "message": "AR command was sent to all agents", "error": 0}),
+    }
+
+    def responder(requisicao: httpx.Request) -> httpx.Response:
+        estado["chamadas"].append(requisicao)
+        if requisicao.url.path == "/security/user/authenticate":
+            return httpx.Response(200, text="jwt-falso")
+        codigo, corpo = estado["active_response"]
+        return httpx.Response(codigo, json=corpo)
+
+    def cliente_falso():
+        with httpx.Client(transport=httpx.MockTransport(responder)) as cliente:
+            yield cliente
+
+    app.dependency_overrides[get_cliente_wazuh] = cliente_falso
+    return estado
 
 
 @pytest.fixture

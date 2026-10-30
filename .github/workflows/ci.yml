@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    name: API (testes + dependências)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt pip-audit
+      # Nenhum teste usa rede nem chaves reais: as APIs externas são simuladas.
+      - run: python -m pytest -q
+      - run: pip-audit -r requirements.txt
+
+  painel:
+    name: Painel (tipos, testes, build, dependências)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: painel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: painel/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=high
+
+  laboratorio:
+    name: Laboratório (regras do Wazuh e compose)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regras do Wazuh são XML válido
+        run: python -c "import xml.dom.minidom as m; m.parse('lab/wazuh/triagem_ia_rules.xml')"
+      - name: docker-compose do laboratório é válido
+        run: docker compose -f lab/docker-compose.yml config --quiet

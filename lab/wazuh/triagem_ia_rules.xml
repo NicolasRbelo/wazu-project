@@ -1,0 +1,29 @@
+<!--
+  wazuh-triagem: detecção de tentativas de prompt injection contra a IA de triagem.
+
+  Quem escreve "ignore as instruções anteriores" no nome de usuário de um login SSH,
+  ou no User-Agent de uma requisição, está mirando no analista automatizado. A tentativa
+  de enganar a IA vira, ela mesma, um indicador de ataque. MITRE ATLAS: AML.T0051.
+
+  Instalação: copiar para /var/ossec/etc/rules/ no manager e reiniciar (lab/README.md).
+  As mesmas famílias de padrão que app/politicas.py procura do lado da API (lá, o texto
+  é normalizado antes; aqui, os separadores cobrem espaço, _, -, %20 e +).
+-->
+<group name="triagem_ia,prompt_injection,">
+
+  <!-- Nome de usuário SSH com instrução para a IA. -->
+  <rule id="100210" level="10">
+    <if_sid>5710</if_sid>
+    <regex type="pcre2">(?i)ignor\w*(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,3}instru|desconsider\w*(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,3}instru|system(?:\s|%20|\+|_|-)*prompt|prompt(?:\s|%20|\+|_|-)+do(?:\s|%20|\+|_|-)+sistema|(?:false|falso)(?:\s|%20|\+|_|-)+positiv|dados_nao_confiaveis|classificacao|acao_sugerida|indicios_manipulacao|(?:n[aã]o|do(?:\s|%20|\+|_|-)+not|don'?t)(?:\s|%20|\+|_|-)+escal|(?:pentest|red(?:\s|%20|\+|_|-)*team)(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,2}autoriz|autorizad\w*(?:\s|%20|\+|_|-)+pel[oa](?:\s|%20|\+|_|-)</regex>
+    <description>sshd: possível prompt injection contra a IA de triagem no nome de usuário</description>
+    <group>authentication_failed,invalid_login,</group>
+  </rule>
+
+  <!-- Requisição web (URL ou User-Agent) com instrução para a IA, inclusive codificada na URL. -->
+  <rule id="100211" level="10">
+    <if_group>web</if_group>
+    <regex type="pcre2">(?i)ignor\w*(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,3}instru|desconsider\w*(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,3}instru|system(?:\s|%20|\+|_|-)*prompt|prompt(?:\s|%20|\+|_|-)+do(?:\s|%20|\+|_|-)+sistema|(?:false|falso)(?:\s|%20|\+|_|-)+positiv|dados_nao_confiaveis|classificacao|acao_sugerida|indicios_manipulacao|(?:n[aã]o|do(?:\s|%20|\+|_|-)+not|don'?t)(?:\s|%20|\+|_|-)+escal|(?:pentest|red(?:\s|%20|\+|_|-)*team)(?:\s|%20|\+|_|-)+(?:\w+(?:\s|%20|\+|_|-)+){0,2}autoriz|autorizad\w*(?:\s|%20|\+|_|-)+pel[oa](?:\s|%20|\+|_|-)</regex>
+    <description>Web: possível prompt injection contra a IA de triagem na requisição</description>
+  </rule>
+
+</group>

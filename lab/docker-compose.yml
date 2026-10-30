@@ -1,0 +1,31 @@
+# Laboratório de ataque: uma vítima monitorada por um agente Wazuh e um atacante.
+#
+# Pré-requisito: o Wazuh single-node (wazuh-docker) rodando; os dois containers entram
+# na rede dele para a vítima falar com o manager. Veja lab/README.md.
+#
+#   docker compose -f lab/docker-compose.yml up -d --build
+#   docker compose -f lab/docker-compose.yml exec atacante ataque forca-bruta
+name: wazuh-triagem-lab
+
+services:
+  vitima:
+    build: ./vitima
+    hostname: vitima-lab
+    environment:
+      WAZUH_MANAGER_SERVER: wazuh.manager
+      WAZUH_AGENT_NAME: vitima-lab
+    # O firewall-drop do Wazuh (resposta ativa) precisa mexer no iptables da vítima.
+    cap_add: [NET_ADMIN]
+    networks: [wazuh]
+
+  atacante:
+    build: ./atacante
+    depends_on: [vitima]
+    environment:
+      ALVO: vitima
+    networks: [wazuh]
+
+networks:
+  wazuh:
+    external: true
+    name: single-node_default

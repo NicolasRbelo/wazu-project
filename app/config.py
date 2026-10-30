@@ -28,5 +28,16 @@ class Settings(BaseSettings):
     # Feedback dos analistas para a IA (fora do git: tem dados do laboratório).
     feedback_arquivo: str = "dados/feedback_ia.json"
 
+    # Alertas da mesma origem com menos que isto entre si viram um incidente só.
+    incidente_janela_minutos: int = 30
+
+    # Resposta ativa (bloqueio de IP com aprovação humana) pela API do Wazuh.
+    wazuh_api_url: str | None = None
+    wazuh_api_usuario: str | None = None
+    wazuh_api_senha: SecretStr | None = None
+    wazuh_api_verificar_tls: bool = True
+    # IPs ou redes (CIDR) que nunca são bloqueados, separados por vírgula.
+    bloqueio_protegidos: str = ""
+
 
 settings = Settings()

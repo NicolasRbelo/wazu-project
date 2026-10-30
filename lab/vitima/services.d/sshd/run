@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+# Sem -e: os logs vão para o syslog (rsyslog), não para o stderr.
+mkdir -p /run/sshd
+exec /usr/sbin/sshd -D

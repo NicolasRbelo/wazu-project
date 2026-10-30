@@ -1,11 +1,21 @@
-import { ArrowClockwise, CaretUp, Check, PencilSimple, Sparkle, Trash } from "@phosphor-icons/react";
+import { ArrowClockwise, CaretUp, Check, PencilSimple, Prohibit, ShieldCheck, Sparkle, Trash } from "@phosphor-icons/react";
 import { useState, type FormEvent } from "react";
 import { useIdioma } from "../i18n";
-import { ACOES, CLASSIFICACOES, SEVERIDADES, type Analise, type Correcao, type PedidoRevisao } from "../tipos";
+import { ACOES, CLASSIFICACOES, SEVERIDADES, type Analise, type Bloqueio, type Correcao, type PedidoRevisao } from "../tipos";
 import { dataHora } from "../util";
 import { Carimbo } from "./Marcas";
 
 export type Formulario = "corrigir" | "descartar" | null;
+
+/** Resposta ativa: só existe quando o analista decidiu bloquear o IP. */
+export interface RespostaAtiva {
+  ip: string;
+  agente: string;
+  bloqueio: Bloqueio | null | undefined;
+  bloqueando: boolean;
+  erro: string | null;
+  aoBloquear: () => void;
+}
 
 // O mesmo mínimo de app/schemas.py (MINIMO_NOTA).
 const MINIMO_NOTA = 10;
@@ -22,6 +32,8 @@ interface Props {
   aoAnalisar: (refazer: boolean) => void;
   aoProximo: () => void;
   aoAnterior: () => void;
+  alertasNoIncidente: number;
+  resposta: RespostaAtiva | null;
 }
 
 export function BarraDecisao({
@@ -36,6 +48,8 @@ export function BarraDecisao({
   aoAnalisar,
   aoProximo,
   aoAnterior,
+  alertasNoIncidente,
+  resposta,
 }: Props) {
   const { t, idioma } = useIdioma();
   const pendente = analise?.revisao === "pendente";
@@ -63,7 +77,8 @@ export function BarraDecisao({
             <span className="mono">{t("decididoEm", { quando: dataHora(analise.revisado_em, idioma) })}</span>
           )}
         </span>
-        <button type="button" className="botao" onClick={() => aoAnalisar(true)} disabled={analisando}>
+        {resposta && <BotaoBloqueio resposta={resposta} />}
+        <button type="button" className="botao botao--fantasma" onClick={() => aoAnalisar(true)} disabled={analisando}>
           <ArrowClockwise size={16} weight="bold" aria-hidden="true" />
           {analisando ? t("analisando") : t("refazer")}
         </button>
@@ -107,6 +122,11 @@ export function BarraDecisao({
           {t("descartar")}
           <kbd>D</kbd>
         </button>
+        {alertasNoIncidente > 1 && (
+          <span className="decisao__dica decisao__dica--incidente">
+            {t("decisaoIncidente", { n: alertasNoIncidente })}
+          </span>
+        )}
       </>
     );
   }
@@ -257,5 +277,60 @@ function FormularioDecisao({ tipo, analise, aoCancelar, aoEnviar }: PropsFormula
         </button>
       </div>
     </form>
+  );
+}
+
+/** Dois cliques: o primeiro só pede a confirmação, com o IP e o agente escritos. */
+function BotaoBloqueio({ resposta }: { resposta: RespostaAtiva }) {
+  const { t, idioma } = useIdioma();
+  const [confirmando, setConfirmando] = useState(false);
+  const { ip, agente, bloqueio, bloqueando, erro, aoBloquear } = resposta;
+
+  if (bloqueio) {
+    return (
+      <span className="decisao__bloqueado">
+        <ShieldCheck size={16} weight="bold" aria-hidden="true" />
+        {t("bloqueado", { ip, agente, quando: dataHora(bloqueio.executado_em, idioma) })}
+      </span>
+    );
+  }
+  return (
+    <span className="decisao__bloqueio">
+      {confirmando ? (
+        <>
+          <button
+            type="button"
+            className="botao botao--perigo"
+            onClick={() => {
+              setConfirmando(false);
+              aoBloquear();
+            }}
+            disabled={bloqueando}
+          >
+            <Prohibit size={16} weight="bold" aria-hidden="true" />
+            {t("confirmarBloqueio", { ip, agente })}
+          </button>
+          <button type="button" className="botao botao--fantasma" onClick={() => setConfirmando(false)}>
+            {t("cancelar")}
+          </button>
+        </>
+      ) : (
+        <button
+          type="button"
+          className="botao"
+          onClick={() => setConfirmando(true)}
+          disabled={bloqueando || bloqueio === undefined}
+          title={t("bloqueioDica")}
+        >
+          <Prohibit size={16} weight="bold" aria-hidden="true" />
+          {bloqueando ? t("bloqueando") : t("bloquearIp", { ip })}
+        </button>
+      )}
+      {erro && (
+        <span className="campo__erro" role="alert">
+          {erro}
+        </span>
+      )}
+    </span>
   );
 }

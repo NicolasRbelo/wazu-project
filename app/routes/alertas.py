@@ -6,20 +6,22 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app import feedback
+from app import feedback, incidentes, resposta
 from app.config import settings
 from app.database import get_db
 from app.enriquecimento import get_http_client, obter_reputacao
 from app.ia import ErroIA, LimiteIA, analisar_alerta, para_saida, ultima_analise
-from app.models import Alerta, Analise, agora_utc
+from app.models import Alerta, Analise, Bloqueio, agora_utc
 from app.politicas import ip_malicioso
 from app.schemas import (
     AlertaSaida,
     AlertaWazuh,
     AnaliseIA,
     AnaliseSaida,
+    BloqueioSaida,
     ReputacaoSaida,
     ResumoAnalise,
+    ResumoIncidente,
     RevisaoEntrada,
 )
 from app.security import verificar_token
@@ -67,6 +69,8 @@ def receber_alerta(alerta: AlertaWazuh, response: Response, db: Session = Depend
         response.status_code = status.HTTP_200_OK
         return db.scalar(select(Alerta).where(Alerta.wazuh_id == alerta.id))
     db.refresh(novo)
+    incidentes.agrupar(db, novo)
+    db.commit()
     return novo
 
 
@@ -85,11 +89,15 @@ def listar_alertas(limite: int = Query(100, ge=1, le=500), db: Session = Depends
         )
         for analise in analises:
             ultimas[analise.alerta_id] = analise  # a mais recente sobrescreve as anteriores
-    return [_saida_com_resumo(alerta, ultimas.get(alerta.id)) for alerta in alertas]
+    por_alerta = incidentes.resumos_por_alerta(db, [a.id for a in alertas])
+    return [_saida_com_resumo(a, ultimas.get(a.id), por_alerta.get(a.id)) for a in alertas]
 
 
-def _saida_com_resumo(alerta: Alerta, analise: Analise | None) -> AlertaSaida:
+def _saida_com_resumo(
+    alerta: Alerta, analise: Analise | None, incidente: ResumoIncidente | None
+) -> AlertaSaida:
     saida = AlertaSaida.model_validate(alerta)
+    saida.incidente = incidente
     if analise is None:
         return saida
     sugestao = AnaliseIA.model_validate_json(analise.sugestao_json)
@@ -136,9 +144,15 @@ def pedir_analise(
             detail="IA não configurada (GEMINI_API_KEY no .env)",
         )
 
+    incidente = incidentes.do_alerta(db, alerta_id)
+    if refazer and incidente is not None and incidente.decisao is not None:
+        # Pedir outra análise reabre o incidente: ele volta para a fila.
+        incidente.decisao = None
+        incidente.decidido_em = None
+        db.commit()
     reputacao = obter_reputacao(db, cliente, alerta.srcip)
     try:
-        registro = analisar_alerta(db, cliente, alerta, reputacao)
+        registro = analisar_alerta(db, cliente, alerta, reputacao, incidentes.contexto(db, alerta_id))
     except LimiteIA:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -186,6 +200,11 @@ def revisar_analise(
 
     registro.revisao = revisao.decisao
     registro.revisado_em = agora_utc()
+    incidente = incidentes.do_alerta(db, alerta_id)
+    if incidente is not None:
+        # A decisão vale para todos os alertas do incidente.
+        incidente.decisao = revisao.decisao
+        incidente.decidido_em = registro.revisado_em
     registro.correcao_json = json.dumps(
         {
             "correcao": revisao.correcao.model_dump() if revisao.correcao else None,
@@ -208,3 +227,79 @@ def revisar_analise(
         suspeito=sugestao.indicios_manipulacao or ip_malicioso(dados_reputacao),
     )
     return para_saida(registro)
+
+
+def _acao_final(registro: Analise) -> str:
+    """A ação que o analista aprovou: a corrigida, se corrigiu; senão, a sugestão final."""
+    if registro.correcao_json:
+        correcao = json.loads(registro.correcao_json).get("correcao")
+        if correcao:
+            return correcao["acao_sugerida"]
+    return AnaliseIA.model_validate_json(registro.sugestao_json).acao_sugerida
+
+
+@router.post("/{alerta_id}/bloqueio", response_model=BloqueioSaida, status_code=status.HTTP_201_CREATED)
+def bloquear_ip(
+    alerta_id: int,
+    response: Response,
+    db: Session = Depends(get_db),
+    cliente: httpx.Client = Depends(resposta.get_cliente_wazuh),
+):
+    """Executa o firewall-drop no agente. Exige a decisão do analista de bloquear o IP."""
+    alerta = _buscar_alerta(db, alerta_id)
+    registro = ultima_analise(db, alerta_id)
+    if registro is None or registro.revisao not in ("aprovada", "corrigida") or _acao_final(registro) != "bloquear_ip":
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="O bloqueio exige a decisão do analista de bloquear o IP (aprovada ou corrigida)",
+        )
+    if not alerta.srcip:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Alerta sem IP de origem")
+    agente_id = (json.loads(alerta.raw_json).get("agent") or {}).get("id")
+    if not agente_id or agente_id == "000":
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Alerta do próprio manager: não há agente onde aplicar o bloqueio",
+        )
+    if resposta.protegido(alerta.srcip):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="IP protegido: nunca é bloqueado")
+    if not resposta.configurado():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="API do Wazuh não configurada (WAZUH_API_URL no .env)",
+        )
+
+    anterior = db.scalar(
+        select(Bloqueio).where(Bloqueio.ip == alerta.srcip, Bloqueio.agente_id == agente_id, Bloqueio.sucesso.is_(True))
+    )
+    if anterior is not None:
+        # Já bloqueado neste agente: não reenviar o comando.
+        response.status_code = status.HTTP_200_OK
+        return anterior
+
+    try:
+        detalhe, sucesso = resposta.bloquear(cliente, alerta.srcip, agente_id), True
+    except resposta.ErroBloqueio as erro:
+        detalhe, sucesso = str(erro), False
+    bloqueio = Bloqueio(alerta_id=alerta.id, ip=alerta.srcip, agente_id=agente_id, sucesso=sucesso, detalhe=detalhe)
+    db.add(bloqueio)
+    db.commit()
+    db.refresh(bloqueio)
+    if not sucesso:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Bloqueio falhou: {detalhe}")
+    return bloqueio
+
+
+@router.get("/{alerta_id}/bloqueio", response_model=BloqueioSaida)
+def consultar_bloqueio(alerta_id: int, db: Session = Depends(get_db)):
+    alerta = _buscar_alerta(db, alerta_id)
+    agente_id = (json.loads(alerta.raw_json).get("agent") or {}).get("id")
+    bloqueio = db.scalar(
+        select(Bloqueio)
+        .where(Bloqueio.ip == alerta.srcip, Bloqueio.agente_id == agente_id, Bloqueio.sucesso.is_(True))
+        .order_by(Bloqueio.executado_em.desc())
+        .limit(1)
+    )
+    if bloqueio is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="IP não bloqueado neste agente")
+    return bloqueio

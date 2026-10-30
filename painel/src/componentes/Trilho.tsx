@@ -132,7 +132,8 @@ function Faixa({ alerta, selecionada, recuada, bater, aoSelecionar }: PropsFaixa
   else
     estado = (
       <span className="faixa__ia">
-        {rotulo("severidade", resumo.severidade)}, {rotulo("acao", resumo.acao_sugerida)}
+        <span className="faixa__severidade">{rotulo("severidade", resumo.severidade)}, </span>
+        {rotulo("acao", resumo.acao_sugerida)}
       </span>
     );
 
@@ -150,6 +151,9 @@ function Faixa({ alerta, selecionada, recuada, bater, aoSelecionar }: PropsFaixa
       <span className="faixa__campo faixa__regra">
         <span className="faixa__chave">
           {alerta.rule_id}
+          {(alerta.incidente?.total ?? 1) > 1 && (
+            <span className="faixa__total mono">×{alerta.incidente?.total}</span>
+          )}
           {alerta.agent_name && <span className="faixa__agente">{alerta.agent_name}</span>}
           {/* Em telas estreitas a coluna de origem some e o IP sobe para esta linha. */}
           {alerta.srcip && <span className="faixa__ip mono">{alerta.srcip}</span>}

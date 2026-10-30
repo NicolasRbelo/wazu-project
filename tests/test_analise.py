@@ -196,6 +196,30 @@ def test_ia_nao_configurada_retorna_503(client, auth, alerta_ssh, rede):
     assert rede["chamadas"] == []
 
 
+def test_limite_le_a_cota_e_o_tempo_de_espera_do_gemini():
+    import httpx
+
+    from app.ia import _limite_de
+
+    corpo = {
+        "error": {
+            "code": 429,
+            "status": "RESOURCE_EXHAUSTED",
+            "details": [
+                {"@type": "type.googleapis.com/google.rpc.QuotaFailure",
+                 "violations": [{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}]},
+                {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": "38s"},
+            ],
+        }
+    }
+
+    limite = _limite_de(httpx.Response(429, json=corpo))
+
+    assert limite.espera_s == 38.0
+    assert "PerMinute" in str(limite)
+    assert _limite_de(httpx.Response(429, text="sem json")).espera_s is None
+
+
 def test_limite_da_ia_retorna_503_sem_gravar(client, auth, alerta_ssh, gemini, db):
     gemini["gemini"] = (429, {"error": {"code": 429, "status": "RESOURCE_EXHAUSTED"}})
 

@@ -62,6 +62,7 @@ class AlertaSaida(BaseModel):
     recebido_em: datetime
     # Só na listagem: o resumo da última análise, para a fila saber o que está pendente.
     analise: "ResumoAnalise | None" = None
+    incidente: "ResumoIncidente | None" = None
 
 
 class ReputacaoAbuseIPDB(BaseModel):
@@ -115,6 +116,7 @@ Classificacao = Literal["verdadeiro_positivo", "falso_positivo", "inconclusivo"]
 Severidade = Literal["baixa", "media", "alta", "critica"]
 Acao = Literal["bloquear_ip", "investigar", "monitorar", "descartar"]
 Revisao = Literal["pendente", "aprovada", "corrigida", "descartada"]
+Decisao = Literal["aprovada", "corrigida", "descartada"]
 
 MITRE_ID = re.compile(r"T\d{4}(?:\.\d{3})?")
 LIMITE_TEXTO_IA = 1000
@@ -152,6 +154,17 @@ class ResumoAnalise(BaseModel):
     indicios_manipulacao: bool
 
 
+class ResumoIncidente(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    total: int
+    nivel_max: int
+    primeiro_em: datetime
+    ultimo_em: datetime
+    decisao: Decisao | None
+
+
 AlertaSaida.model_rebuild()
 
 
@@ -161,7 +174,6 @@ class Correcao(BaseModel):
     acao_sugerida: Acao
 
 
-Decisao = Literal["aprovada", "corrigida", "descartada"]
 MINIMO_NOTA = 10
 
 
@@ -223,3 +235,15 @@ class FeedbackItem(BaseModel):
 
 class UsoEntrada(BaseModel):
     uso: UsoFeedback
+
+
+class BloqueioSaida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    alerta_id: int
+    ip: str
+    agente_id: str
+    sucesso: bool
+    detalhe: str
+    executado_em: datetime

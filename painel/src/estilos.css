@@ -290,6 +290,18 @@ button:disabled {
   color: var(--texto-2);
 }
 
+/* Ação irreversível no mundo real: a confirmação do bloqueio. */
+.botao--perigo {
+  background: var(--critico);
+  border-color: var(--critico);
+  color: #fff;
+  font-weight: 700;
+}
+
+.botao--perigo:hover:not(:disabled) {
+  background: #a82f2f;
+}
+
 .botao--fantasma:hover:not(:disabled) {
   color: var(--texto);
 }
@@ -578,6 +590,14 @@ kbd {
   display: none;
 }
 
+/* Quantos alertas a faixa representa: o incidente inteiro. */
+.faixa__total {
+  flex-shrink: 0;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--faixa-tinta);
+}
+
 .faixa__origem .faixa__valor {
   font-size: 13px;
 }
@@ -766,6 +786,12 @@ kbd {
   margin-left: 12px;
   padding-left: 12px;
   border-left: 1px solid var(--filete-forte);
+}
+
+.detalhe__incidente {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--texto);
 }
 
 .detalhe__grade {
@@ -1113,6 +1139,21 @@ kbd {
   color: var(--texto-3);
 }
 
+.decisao__bloqueio {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.decisao__bloqueado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--texto);
+}
+
 .decisao__feito {
   display: inline-flex;
   align-items: center;
@@ -1428,6 +1469,10 @@ kbd {
     display: none;
   }
 
+  .decisao__dica--incidente {
+    display: none;
+  }
+
   /* O ^ só tem ícone: sem o K ele não diz para que serve. */
   .decisao__barra .decisao__anterior kbd {
     display: inline-block;
@@ -1563,6 +1608,10 @@ kbd {
   }
 
   .faixa__ia--perigo svg {
+    display: none;
+  }
+
+  .faixa__severidade {
     display: none;
   }
 

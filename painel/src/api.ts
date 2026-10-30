@@ -1,6 +1,7 @@
 import type {
   Alerta,
   Analise,
+  Bloqueio,
   FeedbackItem,
   PedidoRevisao,
   Reputacao,
@@ -74,6 +75,19 @@ export const api = {
 
   revisar: (token: string, alertaId: number, pedido: PedidoRevisao) =>
     pedir<Analise>(`/api/alertas/${alertaId}/revisao`, token, json(pedido)),
+
+  /** null quando o IP ainda não foi bloqueado no agente. */
+  bloqueio: async (token: string, alertaId: number): Promise<Bloqueio | null> => {
+    try {
+      return await pedir<Bloqueio>(`/api/alertas/${alertaId}/bloqueio`, token);
+    } catch (erro) {
+      if (erro instanceof ErroApi && erro.status === 404) return null;
+      throw erro;
+    }
+  },
+
+  bloquear: (token: string, alertaId: number) =>
+    pedir<Bloqueio>(`/api/alertas/${alertaId}/bloqueio`, token, { method: "POST" }),
 
   listarFeedback: (token: string) => pedir<FeedbackItem[]>("/api/feedback", token),
 

@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv sh
+exec rsyslogd -n -f /etc/rsyslog.conf

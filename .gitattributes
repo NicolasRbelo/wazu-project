@@ -1,0 +1,5 @@
+# Scripts e configs que rodam dentro dos containers Linux precisam de LF.
+lab/vitima/** text eol=lf
+lab/atacante/** text eol=lf
+lab/wazuh/** text eol=lf
+integrations/custom-wazuh-triagem.py text eol=lf

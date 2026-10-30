@@ -2,7 +2,7 @@ import { MagnifyingGlass, Plugs, PlugsConnected, SignOut } from "@phosphor-icons
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, ErroApi } from "../api";
 import { useIdioma } from "../i18n";
-import { estaPendente, type Alerta, type ResumoAnalise } from "../tipos";
+import { agruparPorIncidente, estaPendente, type Alerta, type ResumoAnalise } from "../tipos";
 import { combina, digitando } from "../util";
 import { Detalhe } from "./Detalhe";
 import { FeedbackVista } from "./FeedbackVista";
@@ -45,13 +45,16 @@ export function Painel({ token, aoSair }: { token: string; aoSair: (porRecusa: b
   }, [carregar]);
 
   const filtrados = useMemo(
-    () => (alertas ?? []).filter((a) => combina(busca, a.srcip, a.rule_id, a.agent_name, a.rule_description)),
+    () =>
+      agruparPorIncidente(
+        (alertas ?? []).filter((a) => combina(busca, a.srcip, a.rule_id, a.agent_name, a.rule_description)),
+      ),
     [alertas, busca],
   );
   const pendentes = useMemo(() => filtrados.filter(estaPendente), [filtrados]);
   const decididos = useMemo(() => filtrados.filter((a) => !estaPendente(a)), [filtrados]);
   const ordem = useMemo(() => [...pendentes, ...decididos], [pendentes, decididos]);
-  const totalPendentes = useMemo(() => (alertas ?? []).filter(estaPendente).length, [alertas]);
+  const totalPendentes = useMemo(() => agruparPorIncidente(alertas ?? []).filter(estaPendente).length, [alertas]);
 
   // Na tela larga, a fila já abre na primeira faixa pendente.
   useEffect(() => {
@@ -87,8 +90,19 @@ export function Painel({ token, aoSair }: { token: string; aoSair: (porRecusa: b
     return () => window.removeEventListener("keydown", aoTeclar);
   }, [vista, mover]);
 
+  // A revisão de um alerta vale para o incidente dele; uma análise nova o reabre.
   const atualizarResumo = useCallback((alertaId: number, resumo: ResumoAnalise) => {
-    setAlertas((lista) => lista?.map((a) => (a.id === alertaId ? { ...a, analise: resumo } : a)) ?? lista);
+    setAlertas((lista) => {
+      if (!lista) return lista;
+      const incidenteId = lista.find((a) => a.id === alertaId)?.incidente?.id;
+      const decisao = resumo.revisao === "pendente" ? null : resumo.revisao;
+      return lista.map((a) => {
+        const doIncidente = incidenteId !== undefined && a.incidente?.id === incidenteId;
+        const incidente = doIncidente && a.incidente ? { ...a.incidente, decisao } : a.incidente;
+        if (a.id === alertaId) return { ...a, analise: resumo, incidente };
+        return doIncidente ? { ...a, incidente } : a;
+      });
+    });
   }, []);
 
   // Decidir manda a faixa para Decididos e já abre a próxima pendente.
