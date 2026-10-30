@@ -6,7 +6,7 @@ CLAUDE.md
 # Banco SQLite local e feedback dos analistas
 *.db
 *.sqlite3
-dados/
+/dados/
 
 # Python
 __pycache__/
