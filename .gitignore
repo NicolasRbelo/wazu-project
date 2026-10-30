@@ -1,0 +1,29 @@
+# Segredos
+.env
+
+CLAUDE.md
+
+# Banco SQLite local e feedback dos analistas
+*.db
+*.sqlite3
+dados/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ambiente virtual
+.venv/
+venv/
+
+# Painel (Vite)
+node_modules/
+dist/
+
+# Rascunhos e capturas do processo de design
+.impeccable/mocks/
+.impeccable/review/
+
+# Cache do detector de design
+.impeccable/hook.cache.json

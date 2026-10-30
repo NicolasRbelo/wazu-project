@@ -1,0 +1,706 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T14:57:01+00:00",
+  "title": "Design System: wazuh-triagem",
+  "extensions": {
+    "colorMeta": {
+      "chao": {
+        "role": "neutral",
+        "displayName": "Petrol Floor",
+        "canonical": "#13202a",
+        "tonalRamp": [
+          "#030c15",
+          "#192731",
+          "#36444f",
+          "#54636f",
+          "#758591",
+          "#97a7b5",
+          "#bbccd9",
+          "#e1f1fe"
+        ]
+      },
+      "chao-fundo": {
+        "role": "neutral",
+        "displayName": "Deep Floor",
+        "canonical": "#0e1820",
+        "tonalRamp": [
+          "#040c14",
+          "#1c262f",
+          "#38444d",
+          "#57636d",
+          "#78848f",
+          "#9aa7b2",
+          "#becbd7",
+          "#e3f1fc"
+        ]
+      },
+      "baia": {
+        "role": "neutral",
+        "displayName": "Rack Bay",
+        "canonical": "#16252f",
+        "tonalRamp": [
+          "#020d15",
+          "#182731",
+          "#34444f",
+          "#536470",
+          "#738591",
+          "#96a8b5",
+          "#b9ccda",
+          "#e0f1fe"
+        ]
+      },
+      "painel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#1b2d3a",
+        "tonalRamp": [
+          "#000d18",
+          "#152734",
+          "#324552",
+          "#506473",
+          "#718595",
+          "#93a8b9",
+          "#b6cddd",
+          "#e1f1fe"
+        ]
+      },
+      "painel-alto": {
+        "role": "neutral",
+        "displayName": "Panel Raised",
+        "canonical": "#223849",
+        "tonalRamp": [
+          "#000c1b",
+          "#122737",
+          "#2e4556",
+          "#4d6477",
+          "#6d8699",
+          "#8fa9bd",
+          "#b3cde2",
+          "#e1f1fe"
+        ]
+      },
+      "bloco-borda": {
+        "role": "neutral",
+        "displayName": "Block Edge",
+        "canonical": "#2b4052",
+        "tonalRamp": [
+          "#000c1b",
+          "#132738",
+          "#2f4457",
+          "#4e6477",
+          "#6e859a",
+          "#90a8be",
+          "#b4cde3",
+          "#e2f1fe"
+        ]
+      },
+      "filete": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#26394a",
+        "tonalRamp": [
+          "#000c1a",
+          "#142737",
+          "#314456",
+          "#4f6476",
+          "#708599",
+          "#92a8bd",
+          "#b5cce2",
+          "#e1f1ff"
+        ]
+      },
+      "filete-forte": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "#3c5568",
+        "tonalRamp": [
+          "#000c1c",
+          "#0f2738",
+          "#2d4557",
+          "#4b6578",
+          "#6c869b",
+          "#8ea9bf",
+          "#b1cde4",
+          "#e0f1ff"
+        ]
+      },
+      "texto": {
+        "role": "neutral",
+        "displayName": "Text",
+        "canonical": "#e8eef2",
+        "tonalRamp": [
+          "#080c0e",
+          "#212629",
+          "#3e4346",
+          "#5d6265",
+          "#7e8387",
+          "#a0a6aa",
+          "#c4cace",
+          "#e9eff3"
+        ]
+      },
+      "texto-2": {
+        "role": "neutral",
+        "displayName": "Text 2",
+        "canonical": "#b3c2cd",
+        "tonalRamp": [
+          "#030c14",
+          "#1b272f",
+          "#37444d",
+          "#56636d",
+          "#76858f",
+          "#99a7b2",
+          "#bcccd7",
+          "#e1f1fc"
+        ]
+      },
+      "texto-3": {
+        "role": "neutral",
+        "displayName": "Text 3",
+        "canonical": "#93a8b7",
+        "tonalRamp": [
+          "#000d17",
+          "#162733",
+          "#324551",
+          "#516472",
+          "#718594",
+          "#93a8b7",
+          "#b7cddc",
+          "#dff1fe"
+        ]
+      },
+      "titulo-creme": {
+        "role": "neutral",
+        "displayName": "Title Cream",
+        "canonical": "#f4ecd8",
+        "tonalRamp": [
+          "#100a01",
+          "#2b2415",
+          "#484131",
+          "#68614f",
+          "#898270",
+          "#aca592",
+          "#d0c9b5",
+          "#f6eeda"
+        ]
+      },
+      "faixa": {
+        "role": "primary",
+        "displayName": "Strip Buff",
+        "canonical": "#e6d9b8",
+        "tonalRamp": [
+          "#130900",
+          "#2e2407",
+          "#4c4124",
+          "#6c6043",
+          "#8d8163",
+          "#b1a485",
+          "#d5c8a8",
+          "#fbeecc"
+        ]
+      },
+      "faixa-recuada": {
+        "role": "primary",
+        "displayName": "Recessed Strip",
+        "canonical": "#d6c9a6",
+        "tonalRamp": [
+          "#120a00",
+          "#2e2404",
+          "#4c4122",
+          "#6c6041",
+          "#8e8161",
+          "#b1a482",
+          "#d5c8a5",
+          "#fbeeca"
+        ]
+      },
+      "faixa-acesa": {
+        "role": "primary",
+        "displayName": "Lit Strip",
+        "canonical": "#efe5c9",
+        "tonalRamp": [
+          "#110a00",
+          "#2c240d",
+          "#4a412a",
+          "#696148",
+          "#8b8268",
+          "#aea58a",
+          "#d2c9ad",
+          "#f8eed2"
+        ]
+      },
+      "faixa-borda": {
+        "role": "primary",
+        "displayName": "Strip Edge",
+        "canonical": "#c4b692",
+        "tonalRamp": [
+          "#130900",
+          "#2f2302",
+          "#4d4120",
+          "#6d603f",
+          "#8f815f",
+          "#b2a481",
+          "#d6c8a4",
+          "#fceec8"
+        ]
+      },
+      "faixa-tinta": {
+        "role": "primary",
+        "displayName": "Strip Ink",
+        "canonical": "#1b242b",
+        "tonalRamp": [
+          "#050c12",
+          "#1d262d",
+          "#3a434b",
+          "#58636b",
+          "#79848d",
+          "#9ba7b0",
+          "#bfcbd4",
+          "#e4f0fa"
+        ]
+      },
+      "faixa-chave": {
+        "role": "primary",
+        "displayName": "Field Key Brown",
+        "canonical": "#5a503f",
+        "tonalRamp": [
+          "#110a00",
+          "#2d2414",
+          "#4a4130",
+          "#6a604e",
+          "#8c816f",
+          "#afa491",
+          "#d3c8b4",
+          "#f9edd9"
+        ]
+      },
+      "faixa-decidida": {
+        "role": "secondary",
+        "displayName": "Decided Grey-Blue",
+        "canonical": "#c5d0d6",
+        "tonalRamp": [
+          "#050c10",
+          "#1e262b",
+          "#3a4448",
+          "#596368",
+          "#7a848a",
+          "#9ca7ad",
+          "#c0cbd1",
+          "#e5f1f7"
+        ]
+      },
+      "faixa-decidida-borda": {
+        "role": "secondary",
+        "displayName": "Decided Edge",
+        "canonical": "#a5b3bb",
+        "tonalRamp": [
+          "#040d12",
+          "#1c272d",
+          "#38444b",
+          "#57636b",
+          "#77858c",
+          "#9aa7af",
+          "#bdccd4",
+          "#e2f1fa"
+        ]
+      },
+      "faixa-decidida-chave": {
+        "role": "secondary",
+        "displayName": "Decided Key",
+        "canonical": "#46525a",
+        "tonalRamp": [
+          "#040c13",
+          "#1c272e",
+          "#38444c",
+          "#57636b",
+          "#77848d",
+          "#9aa7b0",
+          "#bdcbd5",
+          "#e3f1fb"
+        ]
+      },
+      "foco": {
+        "role": "tertiary",
+        "displayName": "Signal Amber",
+        "canonical": "#f0a43a",
+        "tonalRamp": [
+          "#170700",
+          "#361f00",
+          "#5c3a06",
+          "#875500",
+          "#ae7421",
+          "#de9322",
+          "#ffba62",
+          "#ffebd4"
+        ]
+      },
+      "critico": {
+        "role": "tertiary",
+        "displayName": "Level Critical Red",
+        "canonical": "#c53a3a",
+        "tonalRamp": [
+          "#210000",
+          "#4c0207",
+          "#7d0e16",
+          "#af2328",
+          "#d74c49",
+          "#f87871",
+          "#fcb4ae",
+          "#fee9e6"
+        ]
+      },
+      "alto": {
+        "role": "tertiary",
+        "displayName": "Level High Orange",
+        "canonical": "#b4531f",
+        "tonalRamp": [
+          "#1e0100",
+          "#411600",
+          "#6c2c06",
+          "#9f4000",
+          "#c56231",
+          "#ec8655",
+          "#fdb697",
+          "#ffeae0"
+        ]
+      },
+      "medio": {
+        "role": "tertiary",
+        "displayName": "Level Medium Olive Gold",
+        "canonical": "#806716",
+        "tonalRamp": [
+          "#120a00",
+          "#2f2401",
+          "#514009",
+          "#775e05",
+          "#998034",
+          "#bda358",
+          "#e2c77c",
+          "#fdeec2"
+        ]
+      },
+      "baixo": {
+        "role": "tertiary",
+        "displayName": "Level Low Slate",
+        "canonical": "#4f6f82",
+        "tonalRamp": [
+          "#000d1a",
+          "#082839",
+          "#274658",
+          "#466679",
+          "#67879b",
+          "#89aabf",
+          "#accfe4",
+          "#ddf2ff"
+        ]
+      },
+      "carimbo": {
+        "role": "secondary",
+        "displayName": "Stamp Blue",
+        "canonical": "#22598a",
+        "tonalRamp": [
+          "#000b20",
+          "#002646",
+          "#074473",
+          "#2e6597",
+          "#5087bb",
+          "#73aae0",
+          "#a1cefc",
+          "#e3f0fd"
+        ]
+      },
+      "carimbo-descarte": {
+        "role": "secondary",
+        "displayName": "Stamp Oxblood",
+        "canonical": "#7a3b34",
+        "tonalRamp": [
+          "#220000",
+          "#470c09",
+          "#6a2c26",
+          "#8d4c44",
+          "#b26d64",
+          "#d79086",
+          "#feb3a9",
+          "#fee9e6"
+        ]
+      },
+      "nao-confiavel": {
+        "role": "tertiary",
+        "displayName": "Untrusted Salmon",
+        "canonical": "#e0907a",
+        "tonalRamp": [
+          "#220000",
+          "#480c00",
+          "#6e2916",
+          "#924936",
+          "#b76b56",
+          "#dd8d78",
+          "#ffb49f",
+          "#fee9e4"
+        ]
+      },
+      "perigo": {
+        "role": "tertiary",
+        "displayName": "Danger",
+        "canonical": "#f08a80",
+        "tonalRamp": [
+          "#220000",
+          "#4b0406",
+          "#771c1a",
+          "#9c3f39",
+          "#c26159",
+          "#e9847a",
+          "#fbb5ad",
+          "#fee9e6"
+        ]
+      },
+      "perigo-fundo": {
+        "role": "tertiary",
+        "displayName": "Danger Ground",
+        "canonical": "#3a1f22",
+        "tonalRamp": [
+          "#190406",
+          "#371c1f",
+          "#56393c",
+          "#77585a",
+          "#9a787b",
+          "#be9b9d",
+          "#e3bfc1",
+          "#ffe8ea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Large designator number and reputation figures (24px on strips)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Open alert title, Feedback and Connect headings; 19px under 860px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Bay headings, final values on the key rail, block emphasis."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base text and strip values; prose capped at 68-80ch."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Meta lines, hints, form labels, secondary lines."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase printed field keys on strips and the key rail; not section eyebrows."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Evidence log, IPs, times, counts, model names, kbd hints."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "mola",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "CSS easing for strip background and the 14px pull-out of the open strip (0.2s / 0.25s)."
+      },
+      {
+        "name": "slide-to-decided",
+        "value": "spring stiffness 340, damping 34 (Motion layoutId, layout=position)",
+        "purpose": "Signature: the decided strip travels from Pending to Decided as one object."
+      },
+      {
+        "name": "stamp-thunk",
+        "value": "spring stiffness 520, damping 22; from scale 1.5, rotate -12deg, opacity 0 to scale 1, rotate -4deg",
+        "purpose": "One-time landing of the stamp on the decision that just happened."
+      },
+      {
+        "name": "pulse",
+        "value": "opacity 0.55 to 1, 1.2s ease-in-out infinite alternate",
+        "purpose": "Flat skeleton loading; no shimmer or gradient."
+      },
+      {
+        "name": "state-quick",
+        "value": "0.15s",
+        "purpose": "Hover colour and background changes on buttons, tabs, toggles."
+      },
+      {
+        "name": "press",
+        "value": "translateY(1px), 0.1s",
+        "purpose": "Button press."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "MotionConfig reducedMotion=\"user\" + prefers-reduced-motion: reduce",
+        "purpose": "Disables the slide, the stamp thunk, strip transitions and skeleton pulses."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "1180px"
+      },
+      {
+        "name": "single-pane",
+        "value": "860px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "One per bar: Approve, or Analyse before an analysis exists.",
+      "html": "<button class=\"ds-botao ds-botao--primario\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M232.49 80.49l-128 128a12 12 0 0 1-17 0l-56-56a12 12 0 1 1 17-17L96 183 215.51 63.51a12 12 0 0 1 17 17Z\"/></svg>Aprovar<kbd class=\"ds-kbd\">A</kbd></button>",
+      "css": ".ds-botao{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;font:14px/1.45 var(--fonte);border:1px solid var(--filete-forte);border-radius:0;background:none;color:var(--texto);cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,transform .1s}.ds-botao--primario{background:var(--faixa);border-color:var(--faixa);color:var(--faixa-tinta);font-weight:700}.ds-botao--primario:hover{background:var(--faixa-acesa)}.ds-botao:active{transform:translateY(1px)}.ds-botao:focus-visible{outline:2px solid var(--foco);outline-offset:2px}.ds-kbd{display:inline-block;min-width:20px;padding:0 5px;font:11px/18px var(--mono);text-align:center;border:1px solid currentColor;opacity:.75}"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Outlined secondary actions: Correct, Discard, Next, Redo.",
+      "html": "<button class=\"ds-botao-padrao\">Próximo<kbd class=\"ds-kbd\">J</kbd></button>",
+      "css": ".ds-botao-padrao{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;font:14px/1.45 var(--fonte);background:none;border:1px solid var(--filete-forte);border-radius:0;color:var(--texto);cursor:pointer;transition:background .15s,transform .1s}.ds-botao-padrao:hover{background:var(--painel-alto)}.ds-botao-padrao:active{transform:translateY(1px)}.ds-botao-padrao:focus-visible{outline:2px solid var(--foco);outline-offset:2px}.ds-kbd{display:inline-block;min-width:20px;padding:0 5px;font:11px/18px var(--mono);text-align:center;border:1px solid currentColor;opacity:.75}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Cancel and Previous: no outline until focused.",
+      "html": "<button class=\"ds-botao-fantasma\">Cancelar</button>",
+      "css": ".ds-botao-fantasma{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;font:14px/1.45 var(--fonte);background:none;border:1px solid transparent;border-radius:0;color:var(--texto-2);cursor:pointer;transition:color .15s}.ds-botao-fantasma:hover{color:var(--texto)}.ds-botao-fantasma:focus-visible{outline:2px solid var(--foco);outline-offset:2px}"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Square well with label above and help below; amber border on focus.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo__rotulo\">Nota</span><input placeholder=\"Por que esta decisão\"><span class=\"ds-campo__ajuda\">Mínimo de 10 caracteres.</span></label>",
+      "css": ".ds-campo{display:flex;flex-direction:column;gap:6px;font:14px/1.45 var(--fonte);color:var(--texto)}.ds-campo__rotulo{font-size:13px;color:var(--texto-2)}.ds-campo input{min-height:40px;padding:9px 12px;font:inherit;color:var(--texto);background:var(--chao-fundo);border:1px solid var(--filete-forte);border-radius:0;outline:none;caret-color:var(--foco)}.ds-campo input:focus{border-color:var(--foco)}.ds-campo__ajuda{font-size:12px;color:var(--texto-3)}"
+    },
+    {
+      "name": "Tabs",
+      "kind": "nav",
+      "refersTo": "tab-active",
+      "description": "Top-bar view tabs; current tab is a Panel cell with a buff count chip.",
+      "html": "<nav class=\"ds-abas\"><button aria-current=\"page\">Fila <span class=\"ds-abas__contagem\">4</span></button><button>Feedback da IA</button></nav>",
+      "css": ".ds-abas{display:flex;gap:2px;font:14px/1.45 var(--fonte)}.ds-abas button{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;font:inherit;background:none;color:var(--texto-2);border:1px solid transparent;border-radius:0;cursor:pointer;transition:background .15s,color .15s}.ds-abas button:hover{color:var(--texto);background:var(--painel)}.ds-abas button[aria-current=page]{color:#f4ecd8;background:var(--painel);border-color:var(--filete-forte)}.ds-abas button:focus-visible{outline:2px solid var(--foco);outline-offset:2px}.ds-abas__contagem{min-width:22px;padding:0 5px;font:12px/20px var(--mono);text-align:center;background:var(--faixa);color:var(--faixa-tinta)}"
+    },
+    {
+      "name": "Segmented Toggle",
+      "kind": "chip",
+      "refersTo": "toggle-pressed",
+      "description": "PT/EN and Feedback filters: one outline, ruled segments, buff when pressed.",
+      "html": "<div class=\"ds-segmento\"><button aria-pressed=\"true\">PT</button><button aria-pressed=\"false\">EN</button></div>",
+      "css": ".ds-segmento{display:inline-flex;border:1px solid var(--filete-forte);font:12px/1.45 var(--fonte)}.ds-segmento button{height:30px;padding:0 10px;font:inherit;background:none;border:0;border-radius:0;color:var(--texto-2);cursor:pointer}.ds-segmento button+button{border-left:1px solid var(--filete-forte)}.ds-segmento button:hover{color:var(--texto)}.ds-segmento button[aria-pressed=true]{background:var(--faixa);color:var(--faixa-tinta);font-weight:700}.ds-segmento button:focus-visible{outline:2px solid var(--foco);outline-offset:2px}"
+    },
+    {
+      "name": "Control Strip",
+      "kind": "card",
+      "refersTo": "strip",
+      "description": "Signature: one alert as a ruled buff strip with the level designator; open state pulled 14px with amber outline, others recede.",
+      "html": "<div style=\"display:grid;gap:6px;padding:16px 32px 16px 18px;background:var(--baia)\"><button class=\"ds-faixa\" aria-current=\"true\"><span class=\"ds-desig ds-desig--medio\"><b>5</b><span class=\"ds-mag\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></span><span class=\"ds-campo-f\"><span class=\"ds-chave\">5710 srv-lab-01</span><span class=\"ds-valor\">sshd: Attempt to login using a non-existent user</span></span><span class=\"ds-campo-f\"><span class=\"ds-chave\">Origem</span><span class=\"ds-valor ds-mono\">203.0.113.99</span></span><span class=\"ds-campo-f\"><span class=\"ds-chave ds-mono\">14:42:29 UTC</span><span class=\"ds-valor\">sem análise</span></span></button><button class=\"ds-faixa ds-faixa--recuada\"><span class=\"ds-desig ds-desig--alto\"><b>10</b><span class=\"ds-mag\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i><i></i><i></i><i></i></span></span><span class=\"ds-campo-f\"><span class=\"ds-chave\">5712 srv-lab-01</span><span class=\"ds-valor\">sshd: brute force trying to get access</span></span><span class=\"ds-campo-f\"><span class=\"ds-chave\">Origem</span><span class=\"ds-valor ds-mono\">198.51.100.77</span></span><span class=\"ds-campo-f\"><span class=\"ds-chave ds-mono\">14:47:29 UTC</span><span class=\"ds-valor\">alta, investigar</span></span></button></div>",
+      "css": ".ds-faixa{display:grid;grid-template-columns:60px minmax(0,1fr) 150px 132px;width:100%;min-height:66px;padding:0;text-align:left;font:14px/1.45 var(--fonte);background:var(--faixa);color:var(--faixa-tinta);border:1px solid var(--faixa-borda);border-radius:0;outline:3px solid transparent;outline-offset:2px;cursor:pointer;transition:background .2s var(--mola),outline-color .2s,transform .25s var(--mola)}.ds-faixa:hover{background:var(--faixa-acesa)}.ds-faixa--recuada{background:var(--faixa-recuada)}.ds-faixa[aria-current=true]{background:var(--faixa-acesa);outline-color:var(--foco);transform:translateX(14px)}.ds-faixa:focus-visible{outline-color:var(--foco)}.ds-desig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#fff}.ds-desig b{font:700 24px/1 var(--mono)}.ds-desig--medio{background:var(--medio)}.ds-desig--alto{background:var(--alto)}.ds-mag{display:flex;gap:1px}.ds-mag i{width:2px;height:6px;background:rgb(255 255 255/.3)}.ds-mag i.on{background:#fff}.ds-campo-f{display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;padding:8px 12px;border-left:1px solid var(--faixa-borda)}.ds-chave{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--faixa-chave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-valor{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-mono{font-family:var(--mono);font-variant-numeric:tabular-nums}@media (prefers-reduced-motion:reduce){.ds-faixa{transition:none}}"
+    },
+    {
+      "name": "Stamp",
+      "kind": "custom",
+      "refersTo": "stamp",
+      "description": "Decision mark: blue for approved and corrected, oxblood for discarded; tilted -4deg on decided paper.",
+      "html": "<div style=\"display:flex;gap:16px;align-items:center;padding:16px;background:var(--faixa-decidida)\"><span class=\"ds-carimbo\">Aprovado</span><span class=\"ds-carimbo\">Corrigido</span><span class=\"ds-carimbo ds-carimbo--descartada\">Descartado</span><span class=\"ds-carimbo ds-carimbo--grande\">Aprovado</span></div>",
+      "css": ".ds-carimbo{display:inline-block;padding:1px 7px;font:700 11px/1.45 var(--fonte);letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--carimbo);color:var(--carimbo);background:var(--faixa-decidida);transform:rotate(-4deg);white-space:nowrap}.ds-carimbo--descartada{border-color:var(--carimbo-descarte);color:var(--carimbo-descarte)}.ds-carimbo--grande{padding:4px 12px;font-size:15px;border-width:3px}"
+    },
+    {
+      "name": "Untrusted Evidence",
+      "kind": "custom",
+      "refersTo": "evidence-log",
+      "description": "Attacker-controlled text: labelled, dashed salmon box, mono, inert.",
+      "html": "<section class=\"ds-bloco\"><h2>Evidência</h2><p class=\"ds-aviso\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 256 256\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"20\" aria-hidden=\"true\"><path d=\"M40 114.79V56a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8v58.77c0 84.18-71.31 112.07-85.54 116.8a7.54 7.54 0 0 1-4.92 0C111.31 226.86 40 199 40 114.79Z\"/><line x1=\"128\" y1=\"96\" x2=\"128\" y2=\"136\"/><circle cx=\"128\" cy=\"172\" r=\"6\" fill=\"currentColor\"/></svg>Dado não confiável: escrito por quem gerou o evento</p><pre class=\"ds-log\">Oct 30 14:02:11 srv-lab-01 sshd[5150]: Invalid user teste from 203.0.113.99 port 52144</pre></section>",
+      "css": ".ds-bloco{padding:16px 18px 18px;background:var(--painel);border:1px solid #2b4052;font:14px/1.45 var(--fonte);color:var(--texto)}.ds-bloco h2{margin:0 0 12px;font-size:14px;font-weight:700}.ds-aviso{display:flex;align-items:center;gap:6px;margin:0 0 8px;font-size:12px;color:var(--nao-confiavel)}.ds-log{margin:0;max-height:220px;overflow:auto;padding:12px 14px;font:13px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word;color:#ece4cf;background:var(--chao-fundo);border:1px dashed var(--nao-confiavel)}"
+    },
+    {
+      "name": "Key Rail",
+      "kind": "custom",
+      "refersTo": "block",
+      "description": "AI versus final values around a central key column; overridden AI values struck through, kept visible.",
+      "html": "<div class=\"ds-chaves\"><div class=\"ds-linha ds-linha--cabeca\"><span class=\"ds-ia\">IA disse</span><span class=\"ds-k\"></span><span class=\"ds-final\">Final</span></div><div class=\"ds-linha\"><span class=\"ds-ia\"><s>Falso positivo</s></span><span class=\"ds-k\">Classificação</span><span class=\"ds-final\">Inconclusivo</span></div><div class=\"ds-linha\"><span class=\"ds-ia\">Média</span><span class=\"ds-k\">Severidade</span><span class=\"ds-final\">Média</span></div></div>",
+      "css": ".ds-chaves{display:grid;padding:16px 18px;background:var(--painel);font:14px/1.45 var(--fonte)}.ds-linha{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);align-items:center}.ds-linha+.ds-linha{border-top:1px solid var(--filete)}.ds-linha--cabeca+.ds-linha{border-top:0}.ds-ia{padding:10px 16px;text-align:right;font-size:15px;color:var(--texto-2)}.ds-final{padding:10px 16px;font-size:15px;font-weight:700;color:#f4ecd8}.ds-linha--cabeca .ds-final{font-weight:400}.ds-k{align-self:stretch;display:grid;place-items:center;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2);background:var(--chao-fundo);border-left:1px solid var(--filete-forte);border-right:1px solid var(--filete-forte)}.ds-linha--cabeca .ds-k{background:none}.ds-chaves s{color:var(--texto-3);text-decoration-thickness:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Faixas de Controle",
+    "overview": "**Creative North Star: \"Faixas de Controle\"**\n\nAn operations room at night: a dark petrol ground, a rack of buff paper flight-progress strips, and a controller who pulls the active strip out of the rack, works it, stamps it, and lets it slide into the Decided bay. Every alert is a strip with fixed fields (level designator, rule and agent, origin, time and state), so the eye learns one silhouette and reads the queue by position, not by hunting through a table.\n\nThe surface is dense and quiet. Colour is flat and does structural work: the paper strips are the only light objects on the dark floor, the level designator is the only saturated block on a strip, and amber appears only where the operator's attention is. Depth comes from tone and 1px rules, never from shadow, glow, glass or gradient. Corners are square everywhere. Motion is physical and rare: the decided strip travels between bays, and the stamp lands once.\n\nRejected: the SIEM default of a blue data table with a flyout of rounded cards.",
+    "keyCharacteristics": [
+      "Buff paper strips on a petrol ground; the strip is the unit of the whole interface.",
+      "Flat colour, square corners, 1px rules; no shadow, glow, glass or gradient.",
+      "Amber is attention only: focus, the open strip, the text caret.",
+      "B612 for everything, B612 Mono for figures, IPs, times and logs.",
+      "Decisions are stamps; overridden values are struck through, never removed.",
+      "Attacker-controlled text is boxed, dashed and labelled."
+    ],
+    "rules": [
+      {
+        "name": "The Amber Is Attention Rule",
+        "body": "Signal Amber marks only where the operator is: focus, the open strip, the caret. It never decorates, never fills a button, never colours a status.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fixed Ramp Rule",
+        "body": "A rule level always maps to the same band (0-4, 5-7, 8-11, 12-15) and the same colour on every screen. Do not add bands or reuse ramp colours for anything except level and importance.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Stamp Rule",
+        "body": "Accepted decisions (approved, corrected) are Stamp Blue; a discard is Stamp Oxblood. Stamps are the only place those colours appear.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readout Rule",
+        "body": "Any figure, IP, timestamp, count or log goes in B612 Mono with tabular numbers. Words stay in B612.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Weights Rule",
+        "body": "Only 400 and 700 exist. Hierarchy comes from size, weight and the cream-versus-grey text ramp, not from more weights.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Room Rule",
+        "body": "No box-shadow, glow, blur, glass or gradient. A surface is separated by a tone step or a 1px rule, nothing else.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Pulled Strip Rule",
+        "body": "The active item is shown by pulling it out of the rack (translateX 14px; 8px under 860px) with an amber outline, never by lifting it.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** build every list of alerts from the Strip: buff paper, fixed ruled fields, designator on the left.",
+      "**Do** keep every corner square (0px) and every edge a 1px rule.",
+      "**Do** separate surfaces by tone steps (Deep Floor, Petrol Floor, Rack Bay, Panel, buff) instead of shadows.",
+      "**Do** reserve Signal Amber (#f0a43a) for focus, the open strip and the caret.",
+      "**Do** map rule level to the fixed four-band ramp, with the 15-tick magnitude scale, everywhere a level appears.",
+      "**Do** show decisions as stamps: blue for approved and corrected, oxblood for discarded.",
+      "**Do** strike through an overridden AI value and keep it on screen beside the final value.",
+      "**Do** put attacker-controlled text in the dashed salmon box with its explicit label.",
+      "**Do** set figures, IPs, times and logs in B612 Mono with tabular numbers.",
+      "**Do** use Phosphor icons at bold weight, 14-18px, and CSS for any other mark (magnitude ticks, list dashes).",
+      "**Do** gate every motion behind the user's reduced-motion preference; loading is a flat opacity pulse."
+    ],
+    "donts": [
+      "**Don't** use box-shadow, glow, blur, glassmorphism or gradients, including on loading skeletons.",
+      "**Don't** round corners.",
+      "**Don't** use amber for status, emphasis, fills or decoration.",
+      "**Don't** delete or hide an AI value the analyst or a policy overrode.",
+      "**Don't** render attacker-controlled text without the untrusted treatment, and never as HTML.",
+      "**Don't** fall back to the SIEM default of a blue data table with a flyout of rounded cards.",
+      "**Don't** add font weights beyond 400 and 700, or a second type family.",
+      "**Don't** ship raster images in the interface."
+    ]
+  }
+}

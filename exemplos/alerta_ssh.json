@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-10-29T10:15:32.123+0000",
+  "rule": {
+    "level": 5,
+    "description": "sshd: Attempt to login using a non-existent user",
+    "id": "5710",
+    "firedtimes": 1,
+    "mail": false,
+    "groups": ["syslog", "sshd", "authentication_failed", "invalid_login"]
+  },
+  "agent": {
+    "id": "001",
+    "name": "srv-lab-01",
+    "ip": "192.0.2.10"
+  },
+  "manager": {
+    "name": "wazuh-manager-lab"
+  },
+  "id": "1793268932.104857",
+  "full_log": "Oct 29 10:15:32 srv-lab-01 sshd[2211]: Invalid user admin from 203.0.113.45 port 51234",
+  "predecoder": {
+    "program_name": "sshd",
+    "timestamp": "Oct 29 10:15:32",
+    "hostname": "srv-lab-01"
+  },
+  "decoder": {
+    "parent": "sshd",
+    "name": "sshd"
+  },
+  "data": {
+    "srcip": "203.0.113.45",
+    "srcport": "51234",
+    "srcuser": "admin"
+  },
+  "location": "/var/log/auth.log"
+}

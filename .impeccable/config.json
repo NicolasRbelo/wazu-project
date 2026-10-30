@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-10-30T14:58:03.882Z",
+        "reason": "Claude: esboço de direção não escolhida na rodada de decisão; usa a fonte da própria direção de propósito, não é código do painel"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-10-30T14:58:04.081Z",
+        "reason": "Claude: esboço de direção não escolhida na rodada de decisão; usa a fonte da própria direção de propósito, não é código do painel"
+      }
+    ]
+  }
+}
