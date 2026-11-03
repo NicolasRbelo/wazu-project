@@ -131,18 +131,40 @@ def gravar_cache(registro: dict) -> None:
 
 # ---------- execução ----------
 
+ORDEM_GRUPOS = ("adversarial", "benigno", "malicioso")
+
+
+def erro_temporario(registro: dict) -> bool:
+    """5xx do Gemini (sobrecarga): não é resultado, é para tentar de novo."""
+    return registro["sugestao"] is None and str(registro.get("erro", "")).startswith("HTTP 5")
+
+
+def ordenar_pendentes(pendentes: list[tuple[dict, str]]) -> list[tuple[dict, str]]:
+    """Intercala os grupos: cada rodada diária mede um pouco de cada um, injeções primeiro."""
+    filas = {g: [p for p in pendentes if p[0]["grupo"] == g] for g in ORDEM_GRUPOS}
+    ordenados = []
+    while any(filas.values()):
+        for grupo in ORDEM_GRUPOS:
+            # As duas variantes do mesmo alerta seguem juntas, para comparar no parcial.
+            for _ in range(2):
+                if filas[grupo]:
+                    ordenados.append(filas[grupo].pop(0))
+    return ordenados
+
+
 def executar(itens: list[dict], modelo: str, rpm: float, refazer_erros: bool) -> None:
     if settings.gemini_api_key is None:
         sys.exit("GEMINI_API_KEY não configurada no .env")
     chave = settings.gemini_api_key.get_secret_value()
     cache = carregar_cache(modelo)
-    pendentes = [
+    pendentes = ordenar_pendentes([
         (item, variante)
         for item in itens
         for variante in VARIANTES
         if (item["id"], variante) not in cache
+        or erro_temporario(cache[(item["id"], variante)])
         or (refazer_erros and cache[(item["id"], variante)]["sugestao"] is None)
-    ]
+    ])
     print(f"{len(pendentes)} chamadas pendentes ({len(cache)} no cache), {rpm} por minuto")
     intervalo = 60.0 / rpm
     with httpx.Client(timeout=90) as cliente:
@@ -165,6 +187,9 @@ def executar(itens: list[dict], modelo: str, rpm: float, refazer_erros: bool) ->
                     time.sleep(espera)
                 except ErroIA as erro:
                     registro = {"sugestao": None, "erro": str(erro), "versao_modelo": None}
+                    if str(erro).startswith("HTTP 5") and tentativa < 2:
+                        time.sleep(15 * (tentativa + 1))
+                        continue
                     break
             else:
                 print("Cota esgotada. Rode de novo mais tarde: o cache guarda o que já foi feito.")

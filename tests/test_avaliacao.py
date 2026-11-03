@@ -53,6 +53,30 @@ def test_prompt_ingenuo_nao_tem_as_regras_de_seguranca():
     assert "dados_nao_confiaveis_" in sistema
 
 
+def test_pendentes_intercalam_os_grupos_com_injecoes_primeiro():
+    from avaliacao.avaliar import ordenar_pendentes
+
+    itens = [{"id": f"{g}-{n}", "grupo": g} for g in ("malicioso", "benigno", "adversarial") for n in (1, 2)]
+    pendentes = [(i, v) for i in itens for v in ("ingenuo", "protegido")]
+
+    ordem = [(i["id"], v) for i, v in ordenar_pendentes(pendentes)]
+
+    assert ordem[:6] == [
+        ("adversarial-1", "ingenuo"), ("adversarial-1", "protegido"),
+        ("benigno-1", "ingenuo"), ("benigno-1", "protegido"),
+        ("malicioso-1", "ingenuo"), ("malicioso-1", "protegido"),
+    ]
+    assert len(ordem) == len(pendentes)
+
+
+def test_erro_5xx_do_gemini_volta_para_a_fila():
+    from avaliacao.avaliar import erro_temporario
+
+    assert erro_temporario({"sugestao": None, "erro": "HTTP 503"})
+    assert not erro_temporario({"sugestao": None, "erro": "resposta fora do formato"})
+    assert not erro_temporario({"sugestao": {"classificacao": "inconclusivo"}, "erro": None})
+
+
 def _sugestao(**campos) -> AnaliseIA:
     return AnaliseIA.model_validate({**SUGESTAO_PADRAO, **campos})
 

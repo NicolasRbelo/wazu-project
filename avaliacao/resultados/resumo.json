@@ -1,31 +1,31 @@
 {
   "modelo": "gemini-2.5-flash",
-  "gerado_em": "2026-10-30T16:02:02+00:00",
-  "itens_medidos": 9,
+  "gerado_em": "2026-11-03T14:41:58+00:00",
+  "itens_medidos": 20,
   "itens": {
     "total": 71,
     "maliciosos": 29,
     "benignos": 24,
     "adversariais": 18
   },
-  "latencia_mediana_s": 6.12,
+  "latencia_mediana_s": 6.22,
   "configuracoes": {
     "ingenuo": {
-      "executados": 9,
-      "erros": 0,
+      "executados": 20,
+      "erros": 1,
       "acerto": {
-        "valor": 9,
-        "de": 9,
+        "valor": 19,
+        "de": 19,
         "taxa": 1.0
       },
       "inconclusivos": {
         "valor": 0,
-        "de": 9,
+        "de": 19,
         "taxa": 0.0
       },
       "falsos_negativos": {
         "valor": 0,
-        "de": 7,
+        "de": 17,
         "taxa": 0.0
       },
       "escalonamento_indevido": {
@@ -45,26 +45,26 @@
       },
       "falso_alarme_manipulacao": {
         "valor": 0,
-        "de": 7,
+        "de": 17,
         "taxa": 0.0
       }
     },
     "ingenuo+politicas": {
-      "executados": 9,
-      "erros": 0,
+      "executados": 20,
+      "erros": 1,
       "acerto": {
-        "valor": 9,
-        "de": 9,
+        "valor": 19,
+        "de": 19,
         "taxa": 1.0
       },
       "inconclusivos": {
         "valor": 0,
-        "de": 9,
+        "de": 19,
         "taxa": 0.0
       },
       "falsos_negativos": {
         "valor": 0,
-        "de": 7,
+        "de": 17,
         "taxa": 0.0
       },
       "escalonamento_indevido": {
@@ -84,26 +84,26 @@
       },
       "falso_alarme_manipulacao": {
         "valor": 0,
-        "de": 7,
+        "de": 17,
         "taxa": 0.0
       }
     },
     "protegido": {
-      "executados": 9,
-      "erros": 0,
+      "executados": 19,
+      "erros": 1,
       "acerto": {
-        "valor": 8,
-        "de": 9,
-        "taxa": 0.8889
+        "valor": 17,
+        "de": 18,
+        "taxa": 0.9444
       },
       "inconclusivos": {
         "valor": 1,
-        "de": 9,
-        "taxa": 0.1111
+        "de": 18,
+        "taxa": 0.0556
       },
       "falsos_negativos": {
         "valor": 0,
-        "de": 7,
+        "de": 16,
         "taxa": 0.0
       },
       "escalonamento_indevido": {
@@ -123,26 +123,26 @@
       },
       "falso_alarme_manipulacao": {
         "valor": 0,
-        "de": 7,
+        "de": 16,
         "taxa": 0.0
       }
     },
     "completo": {
-      "executados": 9,
-      "erros": 0,
+      "executados": 19,
+      "erros": 1,
       "acerto": {
-        "valor": 8,
-        "de": 9,
-        "taxa": 0.8889
+        "valor": 17,
+        "de": 18,
+        "taxa": 0.9444
       },
       "inconclusivos": {
         "valor": 1,
-        "de": 9,
-        "taxa": 0.1111
+        "de": 18,
+        "taxa": 0.0556
       },
       "falsos_negativos": {
         "valor": 0,
-        "de": 7,
+        "de": 16,
         "taxa": 0.0
       },
       "escalonamento_indevido": {
@@ -162,7 +162,7 @@
       },
       "falso_alarme_manipulacao": {
         "valor": 0,
-        "de": 7,
+        "de": 16,
         "taxa": 0.0
       }
     }
